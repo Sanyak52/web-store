@@ -6,16 +6,114 @@
 
   <!-- Telegram WebApp API -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // Базовая защита от случайного просмотра исходников (не является криптозащитой).
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      const ctrlOrMeta = e.ctrlKey || e.metaKey;
+      if (
+        key === 'f12' ||
+        (ctrlOrMeta && ['u', 's'].includes(key))
+      ) {
+        e.preventDefault();
+      }
+    });
+  </script>
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>🛒 Выбор товара</h1>
+  <div class="product-page">
+    <div class="product-images">
+      <img id="mainImage" src="images/slide/slide/инстр2.97.png" alt="Сляйд для байдарки" class="main-image product-image-source">
+      <canvas id="productCanvas" class="main-image product-canvas" aria-hidden="true"></canvas>
+    </div>
+    
+    <div class="product-details">
+      <h1 class="product-title">Сляйд для байдарки</h1>
+      <div class="price">
+        <span class="base-price">₽8999</span>
+        <span class="price-addon" id="priceAddon"></span>
+      </div>
+      
+      <div class="color-selection">
+        <h3>Цвет:</h3>
+        <div class="color-options">
+          <div class="color-option" data-color="white" data-image="images/slide/slide/инстр2.97.png">
+            <div class="color-circle" style="background-color: #fff; border: 4px solid #ddd;"></div>
+            <span>Белый</span>
+          </div>
+          <div class="color-option" data-color="blue" data-image="images/slide/slide/инстр2.103.png">
+            <div class="color-circle" style="background-color: #1E3A8A;"></div>
+            <span>Синий</span>
+          </div>
+          <div class="color-option" data-color="red" data-image="images/slide/slide/инстр2.99.png">
+            <div class="color-circle" style="background-color: #DC143C;"></div>
+            <span>Красный</span>
+          </div>
+          <div class="color-option" data-color="green" data-image="images/slide/slide/инстр2.100.png">
+            <div class="color-circle" style="background-color: #228B22;"></div>
+            <span>Зелёный</span>
+          </div>
+          <div class="color-option" data-color="gray" data-image="images/slide/slide/инстр2.104.png">
+            <div class="color-circle" style="background-color: #808080;"></div>
+            <span>Серый</span>
+          </div>
+          <div class="color-option" data-color="gold" data-image="images/slide/slide/инстр2.102.png">
+            <div class="color-circle" style="background: linear-gradient(45deg, #FFD700, #FFA500);"></div>
+            <span>Золотистый</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="custom-text">
+        <label class="checkbox-container">
+          <input type="checkbox" id="customTextCheck">
+          <span class="checkmark"></span>
+          Именная надпись
+        </label>
+        <div class="char-limit" id="charLimit">Строка должна содержать не более 30 символов</div>
+        <input type="text" id="customTextInput" placeholder="Введите текст для гравировки" disabled>
+      </div>
+      
+      <button id="orderBtn" class="order-button">Оформить заказ</button>
+    </div>
+  </div>
 
-  <div id="products"></div>
+  <!-- Модальное окно для контактов -->
+  <div class="modal" id="contactModal" style="display: none;">
+    <div class="modal-content">
+      <h2>Контактная информация</h2>
+      
+      <div class="input-group">
+        <label>Напишите свой номер телефона</label>
+        <input type="tel" id="phoneInput" placeholder="+7 (999) 123-45-67">
+      </div>
+      
+      <div class="input-group">
+        <label>Username Telegram</label>
+        <input type="text" id="telegramInput" placeholder="@username">
+      </div>
+      
+      <button id="continueBtn" class="continue-button disabled">Оформить заказ</button>
+    </div>
+  </div>
 
-  <button id="orderBtn">Оформить заказ</button>
+  <!-- Страница успешного заказа -->
+  <div class="success-page" id="successPage" style="display: none;">
+    <div class="success-content">
+      <div class="success-icon">✅</div>
+      <h2>Заказ оформлен!</h2>
+      <p>Спасибо за ваш заказ.<br>Мы свяжемся с вами в ближайшее время.</p>
+      <div class="order-summary">
+        <h3>Детали заказа:</h3>
+        <div id="orderDetails"></div>
+      </div>
+      <button id="newOrderBtn" class="new-order-button">Оформить новый заказ</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
